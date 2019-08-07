@@ -2,7 +2,7 @@ FROM ubuntu:bionic
 
 WORKDIR /usr/src/sdk
 
-RUN apt-get update && apt-get install -yq --no-install-recommends ca-certificates build-essential ocaml ocamlbuild automake autoconf libtool wget python libssl-dev libssl-dev libcurl4-openssl-dev protobuf-compiler git libprotobuf-dev alien cmake debhelper uuid-dev libxml2-dev
+RUN apt-get update && apt-get install -yq --no-install-recommends ca-certificates build-essential ocaml ocamlbuild automake autoconf libtool wget python libssl-dev libssl-dev libcurl4-openssl-dev protobuf-compiler git libprotobuf-dev alien cmake debhelper uuid-dev libxml2-dev libgtest-dev
 
 RUN wget --progress=dot:mega -O iclsclient.rpm http://registrationcenter-download.intel.com/akdlm/irc_nas/11414/iclsClient-1.45.449.12-1.x86_64.rpm && \
     alien --scripts -i iclsclient.rpm && \
@@ -24,6 +24,8 @@ RUN git clone -b sgx_2.5 --depth 1 https://github.com/intel/linux-sgx && \
     ./linux/installer/bin/sgx_linux_x64_sdk_2.5.100.49891.bin --prefix=/opt/intel && \
     ./linux/installer/bin/sgx_linux_x64_psw_2.5.100.49891.bin && \
     cd .. && rm -rf linux-sgx/
+
+RUN git clone https://github.com/google/googletest.git /tmp/googletest && cd /tmp/googletest/googletest && mkdir build && cd build && cmake ../ && make && cp lib/* /usr/lib && cd && rm -rf /tmp/googletest
 
 WORKDIR /usr/src/app
 
